@@ -6,6 +6,7 @@ local CACHE_KEYS = {
   PLUGINS_CONFIGURATIONS = "plugins_configurations",
   BASICAUTH_CREDENTIAL = "basicauth_credentials",
   KEYAUTH_CREDENTIAL = "keyauth_credentials",
+  JWTAUTH_CREDENTIAL = "jwtauth_credentials",
   SSL = "ssl",
   REQUESTS = "requests"
 }
@@ -78,6 +79,10 @@ end
 
 function _M.keyauth_credential_key(key)
   return CACHE_KEYS.KEYAUTH_CREDENTIAL.."/"..key
+end
+
+function _M.jwtauth_credential_key(id)
+  return CACHE_KEYS.JWTAUTH_CREDENTIAL.."/"..id
 end
 
 function _M.ssl_data(api_id)

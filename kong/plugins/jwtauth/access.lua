@@ -3,7 +3,7 @@ local stringy = require "stringy"
 local Multipart = require "multipart"
 local responses = require "kong.tools.responses"
 local constants = require "kong.constants"
-local jwt = require "luajwt"
+local jwt = require "resty.jwt"
 local basexx = require "basexx"
 
 local CONTENT_TYPE = "content-type"
@@ -191,9 +191,10 @@ function _M.execute(conf)
     secret = decode(secret)
   end
 
-  local validate = true -- validate signature, exp and nbf (default: true)
-  local profile, err = jwt.decode(token, secret, validate)
-  if err then
+  local jwt_obj = jwt:load_jwt(jwt_token)
+  -- default leeway for verifying exp is 0
+  local verified = jwt:verify_jwt_obj(key, jwt_obj) -- validate signature, exp and nbf
+  if not verified then
     return responses.send_HTTP_FORBIDDEN(err)
   end
 
